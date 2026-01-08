@@ -19,4 +19,25 @@ class BookRepository
             return 1;
         return 0; 
     }
+
+    public function BookExsist($title)
+    {
+        $db = Database::GetConn();
+        $sql = "SELECT COUNT(*) FROM books WHERE title = ?";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$title]);
+        if ($stmt->fetchColumn() > 0)
+            return 1;
+        return 0;
+    }
+
+    public function getAllBooks()
+    {
+        $db = Database::GetConn();
+        $sql = "SELECT books.*, authors.name 
+                FROM books 
+                LEFT JOIN authors ON books.author_id = authors.id";
+        $stmt = $db->query($sql);
+        return $stmt->fetchAll();
+    }
 }

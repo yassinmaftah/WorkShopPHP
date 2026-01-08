@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/src/Repositories/BookRepository.php';
-require_once __DIR__ . '/src/Entities/Book.php';
+require_once __DIR__ .  '/src/Entities/Book.php';
+require_once __DIR__ . '/src/Services/LibraryService.php';
 
 $repo = new BookRepository();
 
@@ -12,11 +13,22 @@ $repo = new BookRepository();
 
 if (isset($_POST['Sub']))
 {
-    $nameAuthor = $__POST['author'];
-    $title = $__POST['title'];
-    $Stock = $__POST['Stock'];
-    $Price = $__POST['Price'];
+    $nameAuthor = $_POST['author'];
+    $title = $_POST['title'];
+    $Stock = $_POST['Stock'];
+    $Price = $_POST['Price'];
+
+    $library = new LibraryService();
+
+    if (!$library->bookData($title,$nameAuthor,$Stock,$Price))
+        echo "Title is Duplicated<br>";
+    else
+        echo "Book Added!";
 }
+
+$books = $repo->getAllBooks();
+
+// print_r($books);
 
 ?>
 
@@ -31,19 +43,46 @@ if (isset($_POST['Sub']))
     <form method="POST">
         <h1>Add Book </h1>
         <label for="TEXT">Entre Title: </label>
-        <input type="text" name="title">
+        <input type="text" name="title" require>
         <br><br>
         <label for="TEXT">author Name:  </label>
-        <input type="text" name="author">
+        <input type="text" name="author" require>
         <br><br>
         <label for="number">Stock :  </label>
-        <input type="number" name="Stock">
+        <input type="number" name="Stock" require>
         <br><br>
         <label for="number">Price :  </label>
-        <input type="number" name="Price">
+        <input type="number" name="Price" require>
 
         <br>
         <button type="submit" name="Sub" >Add</button>
     </form>
+
+
+    <h1>All Books: </h1>
+
+    <table border="1" cellpadding="10" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Stock</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($books as $book): ?>
+            <tr>
+                <td><?= $book['id']; ?></td>
+                <td><?= $book['title']; ?></td>
+                <td><?= $book['author_name']; ?></td> 
+                <td><?= $book['price']; ?> €</td>
+                <td><?= $book['stock']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+    
 </body>
 </html>

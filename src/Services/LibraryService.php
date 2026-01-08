@@ -5,6 +5,14 @@ class LibraryService
 {
     public function bookData($title,$author,$Stock,$Price)
     {
-        $newbook = new Book("","","");
+        $RepoAuthor = new AuthorRepository();
+        $RepoBook = new BookRepository();
+
+        $idAuthor = $RepoAuthor->chekcAuthor($author);
+        $newbook = new Book($idAuthor, $Price, $title, $Stock);
+        if (!$RepoBook->BookExsist($title))
+            return $RepoBook->AddBook($newbook);
+        else
+            return 0;
     }
 }
