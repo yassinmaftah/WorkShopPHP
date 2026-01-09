@@ -34,10 +34,25 @@ class BookRepository
     public function getAllBooks()
     {
         $db = Database::GetConn();
-        $sql = "SELECT books.*, authors.name 
+        $sql = "SELECT books.*, authors.name as author_name 
                 FROM books 
                 LEFT JOIN authors ON books.author_id = authors.id";
         $stmt = $db->query($sql);
         return $stmt->fetchAll();
+    }
+
+    public function find_book_by_title($title)
+    {
+        $db = Database::GetConn();
+
+        $sql = "SELECT books.title, authors.name as author_name 
+                FROM books 
+                INNER JOIN authors ON books.author_id = authors.id 
+                WHERE books.title = ?";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$title]);
+
+        return $stmt->fetch();
     }
 }

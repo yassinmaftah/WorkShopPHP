@@ -30,6 +30,16 @@ $books = $repo->getAllBooks();
 
 // print_r($books);
 
+if (isset($_POST['btn']))
+{
+    $title = $_POST['choiceBook'];
+    $Book = $repo->find_book_by_title($title);
+    // if ($book)
+    //     print_r($book);
+    // else
+    //     echo "We don't Book with this Name<br>";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -84,5 +94,16 @@ $books = $repo->getAllBooks();
     </tbody>
 </table>
     
+    <br><br>
+    <form method="post">
+        <label for="TEXT">Entre book name: </label>
+        <input type="text" name="choiceBook">
+
+        <button type="submit" name="btn" >Send</button>
+        <br><br>
+        <?php echo "Title : " . ($Book['title'])  ?>
+        <br>
+        <?php echo "Author name : " . ($Book['author_name'])  ?>
+    </form>
 </body>
 </html>
